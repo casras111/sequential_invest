@@ -1,0 +1,1 @@
+# Trading function for sequential invest
