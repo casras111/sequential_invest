@@ -8,7 +8,7 @@ dates <- seq(as.Date("2006/1/1"),as.Date("2016/5/1"),by="day")
 n <- length(dates)
 #randomize return simulation
 StockPrices <- xts(cbind(a=rnorm(n),b=rnorm(n),c=rnorm(n)),dates)
-autoplot(StockPrices,facets=NULL)
+autoplot(cumsum(StockPrices),facets=NULL)
 
 nstocks <- dim(StockPrices)[2]
 #randomize stock allocation
