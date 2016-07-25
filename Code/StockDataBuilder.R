@@ -1,31 +1,42 @@
-#StockDataBuilder
+require(xts)
+#setwd("C:/Users/Oz/Desktop/study/courses/physicsProject/sequential_invest/Code")
+#setwd("../")
+#setwd("~/DataRaw/")
+COlNames<-c("Date","Pclose","PNominal","return","Open","Basis")
+CompanyNames<-c("Teva","Africa",'Bezek',"cil","Delek","discountInvesment","leumi","migdal","poalim","partner","Mizrahi")
+indecies<-c(5,2,6,4)
 
-A1<-read.csv("Teva.csv",header = T,skip = 3,as.is = T,quote = "")
-A2<-read.csv("Africa.csv",header = T,skip = 3,as.is = T,quote = "")
-A3<-read.csv("Bezek.csv",header = T,skip = 3,as.is = T,quote = "")
-A4<-read.csv("cil.csv",header = T,skip = 3,as.is = T,quote = "")
-A5<-read.csv("Delek.csv",header = T,skip = 3,as.is = T,quote = "")
-A6<-read.csv("discountInvesment.csv",header = T,skip = 3,as.is = T,quote = "")
-A7<-read.csv("leumi.csv",header = T,skip = 3,as.is = T,quote = "")
-A8<-read.csv("migdal.csv",header = T,skip = 3,as.is = T,quote = "")
-A9<-read.csv("perigo.csv",header = T,skip = 3,as.is = T,quote = "")
-A10<-read.csv("poalim.csv",header = T,skip = 3,as.is = T,quote = "")
-A11<-read.csv("partner.csv",header = T,skip = 3,as.is = T,quote = "")
-A12<-read.csv("Mizrahi.csv",header = T,skip = 3,as.is = T,quote = "")
-CompanyNames<-c("Teva","Africa",'Bezek',"cil","Delek","discountInvesment",),
+Stop<-c(1:11)
+for (i in Stop){
+   FileName<-paste(CompanyNames[i],".csv",sep = "")
+   ReadindCSV<-read.csv(FileName,header = T,skip = 3,as.is = T,quote = "")[,1:6]
+   COlumnNames<-paste("S",i,COlNames,sep = "")
+   colnames(ReadindCSV)<-COlumnNames
+   if (i==1){ DataRaw<-ReadindCSV[,c(1,indecies)]}
+   else {DataRaw<-cbind.data.frame(DataRaw,ReadindCSV[,indecies])}
+}
 
-sum(A1$תאריך == A2$תאריך)
-sum(A1$תאריך == A3$תאריך)
-sum(A1$תאריך == A4$תאריך)
-sum(A1$תאריך == A5$תאריך)
-sum(A1$תאריך == A6$תאריך)
-sum(A1$תאריך == A7$תאריך)
-sum(A1$תאריך == A8$תאריך)
-sum(A1$תאריך == A8$תאריך)
-sum(A1$תאריך == A9$תאריך)
-sum(A1$תאריך == A10$תאריך) #A10 contains dates from 2013 - perigo company
-sum(A1$תאריך == A11$תאריך)
-sum(A1$תאריך == A12$תאריך)
+DataRaw$S1Date<-strptime(DataRaw$S1Date,"%d/%m/%Y")
+
+StockPrices<-xts(DataRaw[,-1],DataRaw$S1Date) #xts Format
+
+rm(DataRaw,ReadindCSV,COlNames,FileName,CompanyNames,Stop,i,indecies,COlumnNames) #del unneccery data
+
+save(StockPrices,file = "StockPrices.Rdata")
+
+#At statrt I cheached if we have mismatch in dates.
+# sum(A1$תאריך == A2$תאריך)
+# sum(A1$תאריך == A3$תאריך)
+# sum(A1$תאריך == A4$תאריך)
+# sum(A1$תאריך == A5$תאריך)
+# sum(A1$תאריך == A6$תאריך)
+# sum(A1$תאריך == A7$תאריך)
+# sum(A1$תאריך == A8$תאריך)
+# sum(A1$תאריך == A8$תאריך)
+# sum(A1$תאריך == A9$תאריך) #A9 contains dates from 2013 - perigo company
+# sum(A1$תאריך == A10$תאריך) #we short in time so i drop perigo.
+# sum(A1$תאריך == A11$תאריך)
+# sum(A1$תאריך == A12$תאריך)
 
 
 
