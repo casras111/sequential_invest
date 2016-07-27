@@ -8,7 +8,7 @@ indecies<-c(5,2,6,4)
 
 Stop<-c(1:11)
 for (i in Stop){
-   FileName<-paste(CompanyNames[i],".csv",sep = "")
+   FileName<-paste("DataRaw/",CompanyNames[i],".csv",sep = "")
    ReadindCSV<-read.csv(FileName,header = T,skip = 3,as.is = T,quote = "")[,1:6]
    COlumnNames<-paste("S",i,COlNames,sep = "")
    colnames(ReadindCSV)<-COlumnNames
@@ -22,7 +22,7 @@ StockPrices<-xts(DataRaw[,-1],DataRaw$S1Date) #xts Format
 
 rm(DataRaw,ReadindCSV,COlNames,FileName,CompanyNames,Stop,i,indecies,COlumnNames) #del unneccery data
 
-save(StockPrices,file = "StockPrices.Rdata")
+save(StockPrices,file = "DataWork/StockPrices.Rdata")
 
 #At statrt I cheached if we have mismatch in dates.
 # sum(A1$תאריך == A2$תאריך)
