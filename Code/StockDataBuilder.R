@@ -19,10 +19,11 @@ for (i in Stop){
 DataRaw$S1Date<-strptime(DataRaw$S1Date,"%d/%m/%Y")
 
 StockPrices<-xts(DataRaw[,-1],DataRaw$S1Date) #xts Format
-
+Date<-DataRaw$S1Date
 rm(DataRaw,ReadindCSV,COlNames,FileName,CompanyNames,Stop,i,indecies,COlumnNames) #del unneccery data
 
-save(StockPrices,file = "DataWork/StockPrices.Rdata")
+save(StockPrices,Date,file = "DataWork/StockPrices.Rdata")
+save(Date,file = "DataWork/Date.Rdata")
 
 #At statrt I cheached if we have mismatch in dates.
 # sum(A1$תאריך == A2$תאריך)

@@ -1,20 +1,24 @@
 #K_Histogram 
 
-K_Histogram<-function(StockData = 0 ,K, DDate) {
+K_Histogram<-function(K = 20 ,DDate) {
 
-require(xts)  
-  if (StockData == 0) { print('Please instert Data')}
-  #load("StockPrices.Rdata")
-  #StockData<-StockPrices
+  #converting 
+  require(xts)  
+  #if (StockData == 0) { print('Please instert Data')}
+  load("DataWork/StockPrices.Rdata")
+  load("DataWork/Date.Rdata")
+  
+  StockData<-StockPrices
   #K<-20
   #DDate<-strptime("01/07/2014","%d/%m/%Y")
-  if (DDate>"20160725"){print ("error in DDate!! last Date is on 20160725")}
-  #DDate<-20160101
-    Timeperiod<-paste("20060101/",DDate,sep = "")
+  #if (DDate>"20160725"){print ("error in DDate!! last Date is on 20160725")}
+  DDate<-20160101
+   Timeperiod<-paste("20060101/",DDate,sep = "")
  
     StockData<-StockData[Timeperiod,]
-    Date<-Date[1:dim(StockData)[1]]
     Date<-sort(Date,decreasing = F)
+    Date<-Date[1:dim(StockData)[1]]
+    
   
   #Temp<-1:(length(Date)-K)/K
   LenDate<-1:(length(Date)-K+1)
@@ -22,9 +26,9 @@ require(xts)
   for( i in LenDate){
     DateFlage<-Date[i:(i+K-1)]
     Flag<-sum(DateFlage[1:(K-1)]+24*60*60*3>=DateFlage[2:K],na.rm = T)
-    if (Flag ==19) {Kvec<-cbind(Kvec,i)}
+    if (Flag ==K-1) {Kvec<-c(Kvec,i)}
   }    
-  Kvec<-Kvec
+  Kvec<-Kvec[-1]
   
 }
 
