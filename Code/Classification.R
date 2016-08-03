@@ -60,7 +60,8 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   
   
   
-  Classifier<-cbind(KVec,Trading_Day_Cluster)
+  # Classifier<-cbind(KVec,Trading_Day_Cluster)
+  Classifier<-Trading_Day_Cluster
   save(Classifier,"Classifier.Rdata")
   
 }
