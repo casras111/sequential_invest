@@ -1,6 +1,6 @@
 #K_Histogram 
 
-K_Histogram<-function(K = 20 ,DDate) {
+K_Histogram<-function(K = 20 ,DDate = 20160101) {
 
   #converting 
   require(xts)  
@@ -12,7 +12,7 @@ K_Histogram<-function(K = 20 ,DDate) {
   #K<-20
   #DDate<-strptime("01/07/2014","%d/%m/%Y")
   #if (DDate>"20160725"){print ("error in DDate!! last Date is on 20160725")}
-  DDate<-20160101
+  #DDate<-20160101
    Timeperiod<-paste("20060101/",DDate,sep = "")
  
     StockData<-StockData[Timeperiod,]
