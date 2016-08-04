@@ -6,14 +6,14 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   load("DataWork/StockPrices.Rdata")
   require("randomForest")
   #Part A Building the matrix
-  K=K-1 # adjustment to time period
+  #K=K-1 # adjustment to time period
   Columns2Save<-c(1:11)*4 #saving only th3e returnes.
   StockPrices<-StockPrices[,Columns2Save]
-  IndexOut<-1:(dim(StockPrices)[1] - K+1) #number of moving windows.
+  IndexOut<-1:length(Kvec) #number of moving windows.
   
   listOfDataFrames<-list()
   for (i in IndexOut ){
-    DataSet1<-c(t(StockPrices[i:(i+K-1),]))
+    DataSet1<-c(t(StockPrices[Kvec[i]:(Kvec[i]+K-1),]))
     #DataSet1<-c(t(DataSet1))
     listOfDataFrames[[i]] <- data.frame(DataSet1)}
   
@@ -55,13 +55,13 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   
   if (Flag == 4){ #Monkey
     Num_Of_Windowdim<-dim(DataSet)[2]
-    Trading_Day_Cluster <-runif(Num_Of_Windowdim,1,L)
+    Trading_Day_Cluster <-round(runif(Num_Of_Windowdim,1,L))
   }
   
   
   
   # Classifier<-cbind(KVec,Trading_Day_Cluster)
-  Classifier<-Trading_Day_Cluster
+  Classifier<-cbind(Kvec,Trading_Day_Cluster)
   save(Classifier,"Classifier.Rdata")
   
 }
