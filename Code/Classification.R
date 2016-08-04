@@ -55,14 +55,14 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   
   
   if (Flag == 4){ #Monkey
-    Num_Of_Windowdim<-dim(DataSet)[2]
+    Num_Of_Windowdim<-length(KVec)
     Trading_Day_Cluster <-round(runif(Num_Of_Windowdim,1,L))
   }
   
-  
-  
-  # Classifier<-cbind(KVec,Trading_Day_Cluster)
-  Classifier<-cbind(Kvec,Trading_Day_Cluster)
-  save(Classifier,"Classifier.Rdata")
+
+
+  Classifier<-cbind.data.frame(Kvec,Trading_Day_Cluster)
+  save(Classifier,file="DataWork/Classifier.Rdata")
+
   
 }
