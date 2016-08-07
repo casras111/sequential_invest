@@ -3,7 +3,7 @@
 library(xts)
 library(ggplot2)
 
-
+#trading backtest
 load("DataWork/StockPrices.Rdata")
 retcolnames <- grep("return",colnames(StockPrices))
 nstocks <- length(retcolnames)
@@ -13,20 +13,21 @@ n <- dim(StockPrices)[1]
 #n <- length(dates)
 #randomize return simulation
 #StockPrices <- xts(cbind(a=rnorm(n),b=rnorm(n),c=rnorm(n)),dates)
-autoplot(cumprod(StockPrices[,retcolnames]/100+1),facets=NULL)
+print(autoplot(cumprod(StockPrices[,retcolnames]/100+1),facets=NULL))
 
 #nstocks <- dim(StockPrices)[2]
 #randomize stock allocation
-xvec <- matrix(runif(n*nstocks),ncol=nstocks)
-#make sure it adds up to 1
-xvec <- xvec/rowSums(xvec)
+# xvec <- matrix(runif(n*nstocks),ncol=nstocks)
+# #make sure it adds up to 1
+# xvec <- xvec/rowSums(xvec)
 #end of temp
 
 TradeReturn <- rowSums(xvec*StockPrices[,retcolnames])
 CumTradeReturn <- cumsum(TradeReturn)
 SDTradeReturn <- sd(TradeReturn)
 SharpeTradeReturn <- CumTradeReturn[n]/SDTradeReturn
-ggplot(data.frame(date=index(StockPrices),ret=CumTradeReturn))+geom_line(aes(x=date,y=ret))+
+g1 <- ggplot(data.frame(date=index(StockPrices),ret=CumTradeReturn))+geom_line(aes(x=date,y=ret))+
   ggtitle("Cumulative return from strategy")
+print(g1)
 print(sprintf("Total Profit %.1f NIS with volatility of %.1f and Sharpe %.1f",
               CumTradeReturn[n],SDTradeReturn,SharpeTradeReturn))
