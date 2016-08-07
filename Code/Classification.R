@@ -26,7 +26,7 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   
   if (Flag == 1){ #K-means ,classifier ,randomforest
     #for (o in 1:10){
-    Trading_Day_Cluster <- kmeans(DataSet[,1:i],L , nstart = 50)
+    Trading_Day_Cluster <- kmeans(DataSet[,1:i],L , nstart = length(Kvec)*2)
     Trading_Day_Cluster<-Trading_Day_Cluster$cluster
     #Trading_Day_Cluster$cluster
     #Trading_Day_Cluster$totss
