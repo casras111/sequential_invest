@@ -3,7 +3,7 @@
 K_Histogram<-function(K = 20 ,DDate = 20160101) {
 
   #converting 
-  require(xts)  
+
   #if (StockData == 0) { print('Please instert Data')}
   load("DataWork/StockPrices.Rdata")
   load("DataWork/Date.Rdata")
