@@ -1,7 +1,8 @@
-require(xts)
+
 #setwd("C:/Users/Oz/Desktop/study/courses/physicsProject/sequential_invest/Code")
 #setwd("../")
 #setwd("~/DataRaw/")
+SDB<-function(){
 COlNames<-c("Date","Pclose","PNominal","return","Open","Basis")
 CompanyNames<-c("Teva","Africa",'Bezek',"cil","Delek","discountInvesment","leumi","migdal","poalim","partner","Mizrahi")
 indecies<-c(5,2,6,4)
@@ -21,10 +22,9 @@ DataRaw$S1Date<-strptime(DataRaw$S1Date,"%d/%m/%Y")
 StockPrices<-xts(DataRaw[,-1],DataRaw$S1Date) #xts Format
 Date<-DataRaw$S1Date
 rm(DataRaw,ReadindCSV,COlNames,FileName,CompanyNames,Stop,i,indecies,COlumnNames) #del unneccery data
-
-save(StockPrices,Date,file = "DataWork/StockPrices.Rdata")
 save(Date,file = "DataWork/Date.Rdata")
-
+save(StockPrices,file = "DataWork/StockPrices.Rdata")
+StockPrices<-StockPrices
 #At statrt I cheached if we have mismatch in dates.
 # sum(A1$תאריך == A2$תאריך)
 # sum(A1$תאריך == A3$תאריך)
@@ -38,6 +38,6 @@ save(Date,file = "DataWork/Date.Rdata")
 # sum(A1$תאריך == A10$תאריך) #we short in time so i drop perigo.
 # sum(A1$תאריך == A11$תאריך)
 # sum(A1$תאריך == A12$תאריך)
-
+}
 
 
