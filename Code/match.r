@@ -17,7 +17,7 @@ matchfunc <- function(DDate,k,l) {
   #Loop through each class and measure distance from k-days segment under test
   #MinClass will have the index of the best match class
   for (i in 1:l) {
-    ClassSegments <- Classifier[Classifier$Class==i,1] #TBD change Class name
+    ClassSegments <- Classifier[Classifier$Class==i,1] #assume Class column name
     #illegal initial value to distinguish from incremental add later
     TotalDist <- -1
     for (j in ClassSegments) {

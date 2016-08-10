@@ -10,7 +10,7 @@ load("DataWork/StockPrices.Rdata")
 
 beststrat <- function(DDate,k,l) {
   BestClass <- matchfunc(DDate,k,l)
-  ClassSegments <- Classifier[Classifier$Class==BestClass,1]
+  ClassSegments <- Classifier[Classifier$Class==BestClass,1] #assume Class column name
   retcolnames <- grep("return",colnames(StockPrices))
   DDateReturns <- StockPrices[ClassSegments+k,retcolnames] #TBD to verify k or k-1
   nstocks <- length(retcolnames)
