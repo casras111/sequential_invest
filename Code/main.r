@@ -15,7 +15,7 @@ k <- 20 #how many days to use for k parameter
 Kvec <- K_Histogram(K=k,DDate=DDate)
 l <- 10 #number of different classes used in classification
 KKR <- "K-means"
-Class <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #classifer
+Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #classifer #have no output,
 source("Code/match.r")
 source("Code/strategy.r")
 DDate <- as.Date("2011/2/1") #TBD to fix match to take also non-trading days
