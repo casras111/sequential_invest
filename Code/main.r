@@ -1,6 +1,6 @@
 #main - calls all other sequential invest modules
 
-#packages :
+#packages
 require(xts)
 require(randomForest)
 
@@ -9,13 +9,13 @@ source("Code/StockDataBuilder.R")      #builds StockPrices dataframe, to change 
 source("Code/K_Histogram.R")           #splits StockPrices to K-period days, returns KVec index vector
 source("Code/Classification.R")
 
-StockDataBuilder<-SDB()                #StockDataBuilder
+SDB()                                  #StockDataBuilder function
 DDate <- as.Date("2011/1/1")           #train on first 5 years
 k <- 20 #how many days to use for k parameter
 Kvec <- K_Histogram(K=k,DDate=DDate)
 l <- 10 #number of different classes used in classification
 KKR <- "K-means"
-Class <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #classifer
+Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #classifer
 source("Code/match.r")
 source("Code/strategy.r")
 DDate <- as.Date("2011/2/1") #TBD to fix match to take also non-trading days

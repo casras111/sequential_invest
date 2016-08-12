@@ -9,9 +9,10 @@ load("DataWork/StockPrices.Rdata")
 retcolnames <- grep("return",colnames(StockPrices))
 
 matchfunc <- function(DDate,k,l) {
+  #fix if date is not on trade day, bring to first trading day
+  DDate <- index(first(StockPrices[paste0(DDate,"/")],"1 day"))
+  DDateindx <- which(index(StockPrices)==DDate)
   #k-days segment under test
-  #period <- paste0(DDate,"/",DDate+k)
-  DDateindx <- which(as.Date(index(StockPrices))==DDate) #TBD if date is not on trade day
   kRetMat <- StockPrices[(DDateindx-k):(DDateindx-1),retcolnames] #k window back
   
   #Loop through each class and measure distance from k-days segment under test
