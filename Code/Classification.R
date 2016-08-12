@@ -30,8 +30,6 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
     options(warn=-1)  #stop getting warnings in R about the "converge in 10 iterations"
     Class <- kmeans(t(DataSet[,1:i]),L , nstart = length(Kvec)*2)
     options(warn=0)   #keep getting warnings about problems
-    A<-Class$cluster
-    B<-Class$centers
     #Class$cluster
     #Class$totss
     #Class$size
@@ -40,6 +38,10 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
     #else {ABC<-cbind(ABC,Class$totss)}
     #}
     #plot(log(ABC),1:10)
+    Classifier<-cbind.data.frame(Kvec,Class=Class$cluster)
+    ClassCenters<-Class$centers
+    rownames(ClassCenters)<-paste("center",1:L,sep = "")
+    save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
   }#end if Flag == 1;
   
   
@@ -61,15 +63,10 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   if (Flag == 4){ #Monkey
     Num_Of_Windowdim<-length(Kvec)
     Class <-round(runif(Num_Of_Windowdim,1,L))
+    Classifier<-cbind.data.frame(Kvec,Class)
   }
   
 
-
-  Classifier<-cbind.data.frame(Kvec,Class=Class$cluster)
-  ClassCenters<-Class$centers
-  rownames(ClassCenters)<-paste("center",1:L,sep = "")
-  
-  save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
   save(Classifier,file="DataWork/Classifier.Rdata")
 
 }
