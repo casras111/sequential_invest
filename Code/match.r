@@ -15,10 +15,14 @@ matchfunc <- function(DDate,k,l) {
   #k-days segment under test
   kRetMat <- StockPrices[(DDateindx-k):(DDateindx-1),retcolnames] #k window back
   
+  #filter Classifier data to only look at history, no future peeking
+  HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
   #Loop through each class and measure distance from k-days segment under test
   #MinClass will have the index of the best match class
+  MinClass <- -1
   for (i in 1:l) {
-    ClassSegments <- Classifier[Classifier$Class==i,1] #assume Class column name
+    #class l segments,relies on Class column name
+    ClassSegments <- HistClassifier[HistClassifier$Class==i,1]
     #illegal initial value to distinguish from incremental add later
     TotalDist <- -1
     for (j in ClassSegments) {
@@ -37,6 +41,7 @@ matchfunc <- function(DDate,k,l) {
         }
       }
   }
+  if (MinClass < 0) stop("Error matchfunc: no available class in data")
   return(MinClass)
 }
 

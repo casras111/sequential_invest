@@ -14,8 +14,13 @@ eqfun <- function(x,r) {sum(x)}              #for equality optimization constrai
                                              #need to have same # of parameters
 beststrat <- function(DDate,k,l) {
   DDate <- as.Date(DDate)
+  #fix if date is not on trade day, bring to first trading day
+  DDate <- index(first(StockPrices[paste0(DDate,"/")],"1 day"))
+  DDateindx <- which(index(StockPrices)==DDate)
+  #filter Classifier data to only look at history, no future peeking
+  HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
   BestClass <- matchfunc(DDate,k,l)
-  ClassSegments <- Classifier[Classifier$Class==BestClass,1] #assume Class column name
+  ClassSegments <- HistClassifier[HistClassifier$Class==BestClass,1] #assume Class column name
   retcolnames <- grep("return",colnames(StockPrices))
   DDateReturns <- StockPrices[ClassSegments+k,retcolnames] #Returns on day k+1
   DDateReturns <- DDateReturns/100+1                       #price relatives in pct
