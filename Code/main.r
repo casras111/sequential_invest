@@ -11,7 +11,7 @@ source("Code/StockDataBuilder.R")      #builds StockPrices dataframe, to change 
 source("Code/K_Histogram.R")           #splits StockPrices to K-period days, returns KVec index vector
 source("Code/Classification.R")        #classifer of trading days groups
 
-SDB()                                  #StockDataBuilder function, imports all data
+SDB()                                  #StockDataBuilder function, imports all data #for open 2 close insert 1
 DDate <- as.Date("2011/1/1")           #train on first 5 years
 k <- 20                                #how many days to use for k parameter
 Kvec <- K_Histogram(K=k,DDate=DDate)   #split dates from DDate backward into k-windows

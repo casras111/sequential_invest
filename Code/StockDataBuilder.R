@@ -1,5 +1,5 @@
 ##1st function
-#perpuse : generating a whole data set for trading.
+#purpose : generating a whole datafarme set for trading.
 SDB<-function(Regulgar = 0){  
 COlNames<-c("Date","PNominal","Pclose","return","Open","Basis")
 CompanyNames<-c("Teva","Africa","poalim",'Bezek',"cil","Delek","discountInvesment","leumi","migdal","partner","Mizrahi")
