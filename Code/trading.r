@@ -15,13 +15,20 @@ backtest <- function(StartDate=default1ystart, DDate,k,l) {
   test_prices <- StockPrices[period]
   #run best strategy function for each date in test period and create xvec allocation matrix
   xvec <- t(apply(as.matrix(as.Date(index(test_prices))),1,beststrat,k,l))
-  TradeReturn <- rowSums(xvec*test_prices[,retcolnames])
-  CumTradeReturn <- cumsum(TradeReturn) #cumprod fix
+  colnames(xvec) <- colnames(StockPrices)[retcolnames]
+  colnames(xvec) <- gsub("return","weight",colnames(xvec))
+  BacktestAllocation <- xts(xvec,index(test_prices))
+  print(autoplot(BacktestAllocation)) #for debug of allocation vector
+  TradeReturn <- rowSums(xvec*(test_prices[,retcolnames]/100+1))
+  CumTradeReturn <- cumprod(TradeReturn)
   SDTradeReturn <- sd(TradeReturn)
-  SharpeTradeReturn <- last(CumTradeReturn)/SDTradeReturn
+  SharpeTradeReturn <- (last(CumTradeReturn)-1)/SDTradeReturn
   g1 <- ggplot(data.frame(date=index(test_prices),ret=CumTradeReturn))+geom_line(aes(x=date,y=ret))+
     ggtitle("Cumulative return from strategy")
   print(g1)
-  print(sprintf("Total Profit %.1f NIS with volatility of %.1f and Sharpe %.1f",
-                last(CumTradeReturn),SDTradeReturn,SharpeTradeReturn))
+  print(sprintf("Total Profit percentage %.1f%% with volatility of %.1f and Sharpe %.1f",
+                100*last(CumTradeReturn)-100,100*SDTradeReturn,SharpeTradeReturn))
+
+  save(BacktestAllocation,file="DataWork/BacktestAllocation.Rdata")
+  save(TradeReturn,file="DataWork/TradeReturn.Rdata")
 }
