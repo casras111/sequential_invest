@@ -9,7 +9,6 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   #Part A Building the matrix:
   Columns2Save<-grep("return",colnames(StockPrices))
   StockPrices<-StockPrices[,Columns2Save] #saving only the returnes.
-  Columns2Del<-
   IndexOut<-1:length(Kvec) #number of moving windows.
   
   listOfDataFrames<-list()
@@ -43,5 +42,6 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   
 
   save(Classifier,file="DataWork/Classifier.Rdata")
+  return(Classifier)
 
 }
