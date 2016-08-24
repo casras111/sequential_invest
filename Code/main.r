@@ -20,7 +20,9 @@ SDB()
 ################### TRAIN ####################
 DDate <- as.Date("2011/1/1")           #train on first 5 years
 k <- 20                                #how many days to use for k parameter
-Kvec <- K_Histogram(K=k,DDate=DDate)   #split dates from DDate backward into k-windows
+#Kvec - split dates from DDate backward into k-windows
+#Holiday include parameter default 0, removes more than 3 days of no trading
+Kvec <- K_Histogram(K=k,DDate=DDate)   
 l <- 10                                #number of different classes used in classification
 KKR <- "K-means"
 Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KKR method
@@ -28,7 +30,7 @@ Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KK
 ################# Predict ####################
 source("Code/match.r",echo=TRUE)       #matchfunc function load
 source("Code/strategy.r",echo=TRUE)    #beststrat function load, uses matchfunc
-DDate <- as.Date("2011/2/1")           #start date for prediction
+DDate <- as.Date("2011/2/1")           #date for prediction, last date for backtest
 xvec <- beststrat(DDate,k,l)           #generate single prediction for new day
 source("Code/trading.r",echo=TRUE)     #backtest function load, calls beststrat
 

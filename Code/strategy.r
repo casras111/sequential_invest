@@ -27,10 +27,11 @@ beststrat <- function(DDate,k,l) {
   nstocks <- length(retcolnames)
   #use Rsolnp Lagrange general optimization package
   s <- solnp(rep(1/nstocks,nstocks),fopt, #start with equal weights
-             eqfun=eqfun,eqB=1,           #sum weights equal to 0 constraint
+             eqfun=eqfun,eqB=1,           #sum weights equal to 1 constraint
              LB=rep(0,nstocks),           #all weights>0, long only lower bound constraint
              r=DDateReturns, control=list(trace=0))
-  xvec <- round(s$pars,digits=2)
+  #xvec <- round(s$pars,digits=2)
+  xvec <- s$pars
   return(xvec)
 }
 
