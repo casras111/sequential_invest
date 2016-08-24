@@ -10,7 +10,8 @@ backtest <- function(StartDate=default1ystart, DDate,k,l) {
   retcolnames <- grep("return",colnames(StockPrices))
   nstocks <- length(retcolnames)
   n <- dim(StockPrices)[1]
-  print(autoplot(cumprod(StockPrices[,retcolnames]/100+1),facets=NULL))
+  print(autoplot(cumprod(StockPrices[,retcolnames]/100+1),facets=NULL,
+                 main="Relative Stock Returns between 2006-2016"))
   period <- paste0(StartDate,"/",DDate)
   test_prices <- StockPrices[period]
   #run best strategy function for each date in test period and create xvec allocation matrix
@@ -18,7 +19,8 @@ backtest <- function(StartDate=default1ystart, DDate,k,l) {
   colnames(xvec) <- colnames(StockPrices)[retcolnames]
   colnames(xvec) <- gsub("return","weight",colnames(xvec))
   BacktestAllocation <- xts(xvec,index(test_prices))
-  print(autoplot(BacktestAllocation)) #for debug of allocation vector
+  print(autoplot(BacktestAllocation,              #for debug of allocation vector
+                 main="Stock Weights between 2006-2016"))
   TradeReturn <- rowSums(xvec*(test_prices[,retcolnames]/100+1))
   CumTradeReturn <- cumprod(TradeReturn)
   SDTradeReturn <- sd(TradeReturn)
