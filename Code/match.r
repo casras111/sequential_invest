@@ -20,6 +20,7 @@ matchfunc <- function(DDate,k,l) {
   #Loop through each class and measure distance from k-days segment under test
   #MinClass will have the index of the best match class
   MinClass <- -1
+  LowestDist <- -1 #illegal initial value
   for (i in 1:l) {
     #class l segments,relies on Class column name
     ClassSegments <- HistClassifier[HistClassifier$Class==i,1]
@@ -32,7 +33,7 @@ matchfunc <- function(DDate,k,l) {
         TotalDist <- TotalDist+DistEuclid
       }
     }
-    if (i==1) {
+    if ((LowestDist==-1) && (TotalDist > 0)) {             #first valid TotalDist
       LowestDist <- TotalDist
       MinClass <- i } else {
         if ((TotalDist < LowestDist) && (TotalDist > 0)) {
