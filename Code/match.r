@@ -4,11 +4,11 @@
 
 require(xts)
 
-load("DataWork/Classifier.Rdata")
+#load("DataWork/Classifier.Rdata")
 load("DataWork/StockPrices.Rdata")
 retcolnames <- grep("return",colnames(StockPrices))
 
-matchfunc <- function(DDate,k,l) {
+matchfunc <- function(DDate,k,l,Classifier) {
   #fix if date is not on trade day, bring to first trading day
   DDate <- index(first(StockPrices[paste0(DDate,"/")],"1 day"))
   DDateindx <- which(index(StockPrices)==DDate)
@@ -16,14 +16,14 @@ matchfunc <- function(DDate,k,l) {
   kRetMat <- StockPrices[(DDateindx-k):(DDateindx-1),retcolnames] #k window back
   
   #filter Classifier data to only look at history, no future peeking
-  HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
+  #HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
   #Loop through each class and measure distance from k-days segment under test
   #MinClass will have the index of the best match class
   MinClass <- -1
   LowestDist <- -1 #illegal initial value
   for (i in 1:l) {
     #class l segments,relies on Class column name
-    ClassSegments <- HistClassifier[HistClassifier$Class==i,1]
+    ClassSegments <- Classifier[Classifier$Class==i,1]
     #illegal initial value to distinguish from incremental add later
     TotalDist <- -1
     for (j in ClassSegments) {

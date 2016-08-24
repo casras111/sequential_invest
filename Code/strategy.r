@@ -6,7 +6,7 @@
 require(xts)
 require(Rsolnp)
 
-load("DataWork/Classifier.Rdata")
+#load("DataWork/Classifier.Rdata")
 load("DataWork/StockPrices.Rdata")
 
 fopt <- function(x,r) {-sum(log(x%*%t(r)))}  #function for solnp optimization
@@ -16,11 +16,15 @@ beststrat <- function(DDate,k,l) {
   DDate <- as.Date(DDate)
   #fix if date is not on trade day, bring to first trading day
   DDate <- index(first(StockPrices[paste0(DDate,"/")],"1 day"))
-  DDateindx <- which(index(StockPrices)==DDate)
+  #DDateindx <- which(index(StockPrices)==DDate)
+  
+  Kvec <- K_Histogram(K=k,DDate=DDate)
+  Classifier <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KKR method
+  
   #filter Classifier data to only look at history, no future peeking
-  HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
-  BestClass <- matchfunc(DDate,k,l)
-  ClassSegments <- HistClassifier[HistClassifier$Class==BestClass,1] #assume Class column name
+  #HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
+  BestClass <- matchfunc(DDate,k,l,Classifier)
+  ClassSegments <- Classifier[Classifier$Class==BestClass,1] #assume Class column name
   retcolnames <- grep("return",colnames(StockPrices))
   DDateReturns <- StockPrices[ClassSegments+k,retcolnames] #Returns on day k+1
   DDateReturns <- DDateReturns/100+1                       #price relatives in pct
