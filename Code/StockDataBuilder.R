@@ -30,7 +30,7 @@ for (i in Stop){
 }
 
 #naming the col in O2C
-if(Regular ==1){colnames(O2C)<-paste("O2CReurn",1:i,sep = "")}
+if(Regular ==1){colnames(O2C)<-paste("O2Creturn",1:i,sep = "")}
 
 
 #generating a Bond
