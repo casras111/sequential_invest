@@ -9,11 +9,11 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   #Part A Building the matrix:
   Columns2Save<-grep("return",colnames(StockPrices))
   StockPrices<-StockPrices[,Columns2Save] #saving only the returnes.
-  IndexOut<-1:length(Kvec) #number of moving windows.
+  IndexOut<-1:length(KVec) #number of moving windows.
   
   listOfDataFrames<-list()
   for (i in IndexOut ){
-    DataSet1<-c(t(StockPrices[Kvec[i]:(Kvec[i]+K-1),]))
+    DataSet1<-c(t(StockPrices[KVec[i]:(KVec[i]+K-1),]))
     #DataSet1<-c(t(DataSet1))
     listOfDataFrames[[i]] <- data.frame(DataSet1)}
   
@@ -26,18 +26,18 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   if (Flag == 1){
     #for (o in 1:10){
     options(warn=-1)  #stop getting warnings in R about the "converge in 10 iterations"
-    Class <- kmeans(t(DataSet[,1:i]),L , nstart = length(Kvec)*2)
+    Class <- kmeans(t(DataSet[,1:i]),L , nstart = length(KVec)*2)
     options(warn=0)   #keep getting warnings about problems
-    Classifier<-cbind.data.frame(Kvec,Class=Class$cluster)
+    Classifier<-cbind.data.frame(KVec,Class=Class$cluster)
     ClassCenters<-Class$centers
     rownames(ClassCenters)<-paste("center",1:L,sep = "")
     save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
     }#end if Flag == 1;
   
   if (Flag == 4){ #Monkey
-    Num_Of_Windowdim<-length(Kvec)
+    Num_Of_Windowdim<-length(KVec)
     Class <-round(runif(Num_Of_Windowdim,1,L))
-    Classifier<-cbind.data.frame(Kvec,Class)
+    Classifier<-cbind.data.frame(KVec,Class)
    }
   
 
