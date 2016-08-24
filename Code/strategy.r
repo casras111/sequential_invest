@@ -12,17 +12,25 @@ load("DataWork/StockPrices.Rdata")
 fopt <- function(x,r) {-sum(log(x%*%t(r)))}  #function for solnp optimization
 eqfun <- function(x,r) {sum(x)}              #for equality optimization constraint
                                              #need to have same # of parameters
-beststrat <- function(DDate,k,l) {
+beststrat <- function(DDate,k,l,window_th=60) {
   DDate <- as.Date(DDate)
   #fix if date is not on trade day, bring to first trading day
   DDate <- index(first(StockPrices[paste0(DDate,"/")],"1 day"))
-  #DDateindx <- which(index(StockPrices)==DDate)
-  
-  Kvec <- K_Histogram(K=k,DDate=DDate)
-  Classifier <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KKR method
+  DDateindx <- which(index(StockPrices)==DDate)
+  options(warn=-1) #block warning for non-existent file
+  try(load("DataWork/Classifier.Rdata"),silent=T)
+  options(warn=0)
+  if (!exists("Classifier")) {
+    Kvec <- K_Histogram(K=k,DDate=DDate)
+    Classifier <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KKR method
+  }
+  if (last(Classifier$KVec) < (DDateindx-window_th)) {
+    Kvec <- K_Histogram(K=k,DDate=DDate)
+    Classifier <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KKR method
+  }
   
   #filter Classifier data to only look at history, no future peeking
-  #HistClassifier <- Classifier[Classifier$Kvec<DDateindx,] #relies on Kvec column name
+  #HistClassifier <- Classifier[Classifier$KVec<DDateindx,] #relies on Kvec column name
   BestClass <- matchfunc(DDate,k,l,Classifier)
   ClassSegments <- Classifier[Classifier$Class==BestClass,1] #assume Class column name
   retcolnames <- grep("return",colnames(StockPrices))
