@@ -4,9 +4,9 @@ SDB<-function(Regular = 0){
 
 #Market data:
 Market<-read.csv("DataRaw/MarketPortfolio.csv",header = T,as.is = T,skip = 3)
-MarketReurn<-Market[,4]/Market[,2]
-Marketreturn<-c((MarketReurn-1)*100)
-#Marketdata<-cbind(MarketReurn,Market[,1])
+Marketreturn<-Market[,4]/Market[,2]
+Marketreturn<-c((Marketreturn-1)*100)
+#Marketdata<-cbind(Marketreturn,Market[,1])
 #building dataframe:  
 COlNames<-c("Date","PNominal","Pclose","return","Open","Basis")
 CompanyNames<-c("Teva","Africa","poalim",'Bezek',"cil","Delek","discountInvesment","leumi","migdal","partner","Mizrahi")
@@ -24,7 +24,7 @@ for (i in Stop){
    if (Regular == 1 ){
    IndicesO<-grep("Open",names(ReadindCSV))     #index for open 
    IndicesC<-grep("close",names(ReadindCSV))    #index for close
-   O2CR<-(ReadindCSV[,IndicesO]/ReadindCSV[,IndicesC]-1)*100
+   O2CR<-(ReadindCSV[,IndicesC]/ReadindCSV[,IndicesO]-1)*100
    if(i ==1){O2C<-cbind.data.frame(O2CR)}
    if (i!=1){O2C<-cbind.data.frame(O2C,O2CR)} }
 }
@@ -43,7 +43,7 @@ DataRaw$S1Date<-strptime(DataRaw$S1Date,"%d/%m/%Y")
 StockPrices<-xts(DataRaw[,-1],DataRaw$S1Date) 
 
 #if we seek for open 2 close 
-if (Regular == 1){DataRaw<-cbind.data.frame(DataRaw,O2C)
+if (Regular == 1){DataRaw<-cbind.data.frame(S1Date = DataRaw$S1Date,O2C,cashreturn = bond,Marketreturn)
                    StockPrices<-xts(DataRaw[,-1],DataRaw$S1Date) }
 
 #not the most necessary for code:
