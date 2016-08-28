@@ -20,10 +20,10 @@ backtest <- function(StartDate=default1ystart, DDate,k,l) {
   colnames(xvec) <- gsub("return","weight",colnames(xvec))
   BacktestAllocation <- xts(xvec,index(test_prices))
   print(autoplot(BacktestAllocation,              #for debug of allocation vector
-                 main="Stock Weights between 2006-2016"))
+                 main="Stock Weights for backtest period"))
   TradeReturn <- rowSums(xvec*(test_prices[,retcolnames]/100+1))
   CumTradeReturn <- cumprod(TradeReturn)
-  SDTradeReturn <- sd(TradeReturn)
+  SDTradeReturn <- sd(TradeReturn)*16 #multiply by sqrt(256) to get yearly sd
   SharpeTradeReturn <- (last(CumTradeReturn)-1)/SDTradeReturn
   g1 <- ggplot(data.frame(date=index(test_prices),ret=CumTradeReturn))+geom_line(aes(x=date,y=ret))+
     ggtitle("Cumulative return from strategy")
