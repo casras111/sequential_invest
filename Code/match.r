@@ -2,7 +2,7 @@
 #Builds on previously calculated Classifier dataframe for eack k-days segment
 #and matches best class for k days ago starting from DDate day parameter
 
-require(xts)
+library(xts)
 
 #load("DataWork/Classifier.Rdata")
 load("DataWork/StockPrices.Rdata")

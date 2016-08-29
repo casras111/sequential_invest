@@ -3,8 +3,8 @@
 # Does this for each of the methods: Kmeans/Kernel/RandomForest/Monkey
 # Returns xvec with best allocation of capital proportion among n stocks
 
-require(xts)
-require(Rsolnp)
+library(xts)
+library(Rsolnp)
 
 #load("DataWork/Classifier.Rdata")
 load("DataWork/StockPrices.Rdata")
@@ -20,7 +20,11 @@ beststrat <- function(DDate,k,l,window_th=60) {
   options(warn=-1) #block warning for non-existent file
   try(load("DataWork/Classifier.Rdata"),silent=T)
   options(warn=0)
+  #Train on history dates earlier than window_th before present
+  #Classifier creates new clusters each time it is run
   if (!exists("Classifier")) {
+    #Kvec - split dates from DDate backward into k-windows
+    #Holiday include parameter default 0, removes more than 3 days of no trading
     Kvec <- K_Histogram(K=k,DDate=DDate)
     Classifier <- Classification(KVec=Kvec,K=k,L=l,KKR=KKR) #group k-windows into classes using KKR method
   }
