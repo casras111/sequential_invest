@@ -2,7 +2,9 @@
 #group k-windows into classes using KKR method
 
 Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
-#All available featuress :  K-means & Monkey
+
+  set.seed(123)
+  #All available featuress :  K-means & Monkey
   CLASS<-c("K-means","Kernel","Randomforest","Monkey")
   load("DataWork/StockPrices.Rdata")
  
@@ -25,9 +27,9 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   
   if (Flag == 1){
     #for (o in 1:10){
-    options(warn=-1)  #stop getting warnings in R about the "converge in 10 iterations"
-    Class <- kmeans(t(DataSet[,1:i]),L , nstart = length(KVec)*2)
-    options(warn=0)   #keep getting warnings about problems
+    #options(warn=-1)  #stop getting warnings in R about the "converge in 10 iterations"
+    Class <- kmeans(t(DataSet[,1:i]),L , nstart = L )
+    #options(warn=0)   #keep getting warnings about problems
     Classifier<-cbind.data.frame(KVec,Class=Class$cluster)
     ClassCenters<-Class$centers
     rownames(ClassCenters)<-paste("center",1:L,sep = "")
