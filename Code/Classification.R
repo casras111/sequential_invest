@@ -2,7 +2,9 @@
 #group k-windows into classes using KKR method
 
 Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
-#All available featuress :  K-means & Monkey
+
+  set.seed(123)
+  #All available featuress :  K-means & Monkey
   CLASS<-c("K-means","Kernel","Randomforest","Monkey")
   load("DataWork/StockPrices.Rdata")
  
