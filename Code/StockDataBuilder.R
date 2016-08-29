@@ -59,6 +59,9 @@ save(StockPrices,file = "DataWork/StockPrices.Rdata")
 
 StockPrices<-StockPrices }
 
+
+#StockPrices<-StockPrices[,grep("ret",names(StockPrices))]
+
 # ###################################
 # #Validatae the return calculation #
 # ###################################
