@@ -3,7 +3,7 @@
 
 Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
 
-  set.seed(123)
+  
   #All available featuress :  K-means & Monkey
   CLASS<-c("K-means","Kernel","Randomforest","Monkey")
   load("DataWork/StockPrices.Rdata")
@@ -28,7 +28,8 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
   if (Flag == 1){
     #for (o in 1:10){
     #options(warn=-1)  #stop getting warnings in R about the "converge in 10 iterations"
-    Class <- kmeans(t(DataSet[,1:i]),L , nstart = L )
+    set.seed(123)
+    Class <- kmeans(t(DataSet[,1:i]),L , nstart = L,iter.max = 20 )
     #options(warn=0)   #keep getting warnings about problems
     Classifier<-cbind.data.frame(KVec,Class=Class$cluster)
     ClassCenters<-Class$centers
@@ -42,8 +43,9 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
     Classifier<-cbind.data.frame(KVec,Class)
    }
   
-
-  save(Classifier,file="DataWork/Classifier.Rdata")
+  print(paste0("Classifier working, k is: ",K))
+  filename <- paste0("DataWork/Classifier",K,".Rdata")
+  save(Classifier,file=filename)
   return(Classifier)
 
 }
