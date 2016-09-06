@@ -54,6 +54,9 @@ beststrat <- function(DDate,ksearch,l,window_th=60) {
                LB=rep(0,nstocks),           #all weights>0, long only lower bound constraint
                r=DDateReturns, control=list(trace=0))
     maxret_vec[i] <- -last(s$values)   #maximum value found in min optimizer
+    #normalize return for number of segments in class chosen
+    maxret_vec[i] <- maxret_vec[i]/length(ClassSegments)
+    if (maxret_vec[i]<0) stop("solnp optimization gives negative return instead of cash")
     xvec_k[i,] <- s$pars               #optimal allocation found
   }
   print("maxret is: ");print(round(maxret_vec,3))
