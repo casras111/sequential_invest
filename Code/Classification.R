@@ -33,7 +33,7 @@ Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
     set.seed(123)
     #Class <- kmeans(t(DataSet[,IndexOut]),L , nstart = L,iter.max = 20 )#
     Class <- kmeans(t(DataSet[,IndexOut]),L , nstart = L,iter.max = 20 )#
-    Chanig to matrix
+    #Chanig to matrix!!!!!!!!!!!!!!!!!!ss
     #options(warn=0)   #keep getting warnings about problems
     Classifier<-cbind.data.frame(KVec,Class=Class$cluster)
     ClassCenters<-Class$centers
