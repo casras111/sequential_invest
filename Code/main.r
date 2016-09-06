@@ -2,6 +2,7 @@
 
 #packages
 library(xts)
+library(ggplot2)
 
 set.seed(1234) #for Monkey strategy reproducibility
 if (basename(getwd())=="Code") setwd(normalizePath("..")) #for knitr workaround
@@ -25,7 +26,7 @@ print(autoplot(cumprod(StockPrices[,retcolnames]/100+1),facets=NULL,
                main="Relative Stock Returns between 2006-2016"))
 
 ################# Parameters Monkey #####################
-ksearch <- c(2,5,10,15) # (2,5,10,15,20) #values of k for which to optimize allocation vector
+ksearch <- c(2,5) # (2,5,10,15,20) #values of k for which to optimize allocation vector
 #k <- 10                     #how many days to use for k parameter
 l <- 10                     #number of different classes used in classification
 #KKR <- "Monkey"            #clustering method, Monkey - random, K-Means - K-means
