@@ -1,8 +1,8 @@
 ##Classification
 #group k-windows into classes using KKR method
-library("raster")
+#library("raster")
 library("cluster")
-library("randomForest")
+#library("randomForest")
 Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
 
   
