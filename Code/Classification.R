@@ -1,11 +1,13 @@
 ##Classification
 #group k-windows into classes using KKR method
-
-Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
+library("raster")
+library("cluster")
+library("randomForest")
+Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
 
   
   #All available featuress :  K-means & Monkey
-  CLASS<-c("K-means","Kernel","Randomforest","Monkey")
+  CLASS<-c("K-means","Clara","Kernel","Randomforest","Monkey")
   load("DataWork/StockPrices.Rdata")
  
   #Part A Building the matrix:
@@ -29,13 +31,30 @@ Classification<-function (KVec ,K = 2 , L = 8 , KKR = "Monkey"){
     #for (o in 1:10){
     #options(warn=-1)  #stop getting warnings in R about the "converge in 10 iterations"
     set.seed(123)
-    Class <- kmeans(t(DataSet[,1:i]),L , nstart = L,iter.max = 20 )
+    #Class <- kmeans(t(DataSet[,IndexOut]),L , nstart = L,iter.max = 20 )#
+    Class <- kmeans(t(DataSet[,IndexOut]),L , nstart = L,iter.max = 20 )#
+    #Chanig to matrix!!!!!!!!!!!!!!!!!!ss
     #options(warn=0)   #keep getting warnings about problems
     Classifier<-cbind.data.frame(KVec,Class=Class$cluster)
     ClassCenters<-Class$centers
     rownames(ClassCenters)<-paste("center",1:L,sep = "")
     save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
     }#end if Flag == 1;
+  
+  
+  
+  if (Flag == 2){
+    set.seed(176)
+    #Class <- svm (DataSet~DataSet[,1],type = "C-classification",data = DataSet,gamma = 0.1)
+    Class <- clara(t(DataSet),L,samples=500,sampsize = nrow(t(DataSet)),metric="manhattan",pamLike=T)
+    Classifier<-cbind.data.frame(KVec,Class=Class$clustering)
+    #hist(Classifier$Class)
+    ClassCenters<-Class$medoids
+    rownames(ClassCenters)<-paste("center",1:L,sep = "")
+    colnames(ClassCenters)<-paste("Day",1:ncol(ClassCenters),sep = "")
+    save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
+
+  }
   
   if (Flag == 4){ #Monkey
     Num_Of_Windowdim<-length(KVec)
