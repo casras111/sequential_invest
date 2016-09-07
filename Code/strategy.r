@@ -37,8 +37,10 @@ beststrat <- function(DDate,ksearch,l,window_th=60) {
       #group k-windows into classes using KKR method
       Classifier <- Classification(KVec=Kvec,K=ksearch[i],L=l,KKR=KKR)
     }
-    #recreate classifier if it's older than window_th days
-    if (last(Classifier$KVec) < (DDateindx-window_th)) {
+    #recreate classifier if it's older than window_th days or
+    #has data based on future dates
+    if ((last(Classifier$KVec) < (DDateindx-window_th)) ||
+        (last(Classifier$KVec) > (DDateindx-ksearch[i]))) {
       Kvec <- K_Histogram(K=ksearch[i],DDate=DDate)
       #group k-windows into classes using KKR method
       Classifier <- Classification(KVec=Kvec,K=ksearch[i],L=l,KKR=KKR)
@@ -56,7 +58,8 @@ beststrat <- function(DDate,ksearch,l,window_th=60) {
     maxret_vec[i] <- -last(s$values)   #maximum value found in min optimizer
     #normalize return for number of segments in class chosen
     maxret_vec[i] <- maxret_vec[i]/length(ClassSegments)
-    if (maxret_vec[i]<0) stop("solnp optimization gives negative return instead of cash")
+    #0.01 used to prevent calculation precision errors when comparing to 0
+    if (maxret_vec[i]<(-0.01)) stop("solnp optimization gives negative return instead of cash")
     xvec_k[i,] <- s$pars               #optimal allocation found
   }
   print("maxret is: ");print(round(maxret_vec,3))
@@ -70,6 +73,8 @@ beststrat <- function(DDate,ksearch,l,window_th=60) {
   maxret_mat <- maxret_mat/(sum(maxret_vec))  #normalize weights to 1
   print(cbind(ksearch,round(maxret_mat[,1],3)))
   xvec <- colSums(xvec_k*maxret_mat)
+  names(xvec) <- colnames(StockPrices)[retcolnames]
+  #0.01 used to prevent calculation precision errors when comparing to 0
   if (abs(sum(xvec)-1)>0.01) stop("xvec calculation in beststrat does not sum to 1")
   return(xvec)
 }

@@ -1,8 +1,8 @@
 ##Classification
 #group k-windows into classes using KKR method
-library("raster")
+#library("raster")
 library("cluster")
-library("randomForest")
+#library("randomForest")
 Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
 
   
@@ -19,13 +19,14 @@ Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
   for (i in IndexOut ){
     DataSet1<-c(t(StockPrices[KVec[i]:(KVec[i]+K-1),]))
     #DataSet1<-c(t(DataSet1))
-    listOfDataFrames[[i]] <- data.frame(DataSet1)}
+    listOfDataFrames[[i]] <- data.frame(DataSet1)
+  }
   
   DataSet <- do.call("cbind", listOfDataFrames)
   
  
   #Part B, cheaking the Classification:
-  Flag<-which (CLASS == KKR)  #K-means, classifier, randomforest, Monkey ; c(1,2,3,4)
+  Flag <- which (CLASS == KKR)  #K-means, classifier, randomforest, Monkey ; c(1,2,3,4)
   
   if (Flag == 1){
     #for (o in 1:10){
@@ -37,13 +38,13 @@ Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
     #options(warn=0)   #keep getting warnings about problems
     Classifier<-cbind.data.frame(KVec,Class=Class$cluster)
     ClassCenters<-Class$centers
-    rownames(ClassCenters)<-paste("center",1:L,sep = "")
+    rownames(ClassCenters) <- paste("center",1:L,sep = "")
     save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
-    }#end if Flag == 1;
+  }#end if Flag == 1;
   
   
   
-  if (Flag == 2){
+  if (Flag == 2) {
     set.seed(176)
     #Class <- svm (DataSet~DataSet[,1],type = "C-classification",data = DataSet,gamma = 0.1)
     Class <- clara(t(DataSet),L,samples=500,sampsize = nrow(t(DataSet)),metric="manhattan",pamLike=T)
@@ -53,7 +54,6 @@ Classification<-function (KVec ,K = 20 , L = 8 , KKR = "Monkey"){
     rownames(ClassCenters)<-paste("center",1:L,sep = "")
     colnames(ClassCenters)<-paste("Day",1:ncol(ClassCenters),sep = "")
     save(ClassCenters,file = "DataWork/ClassCenters.Rdata")
-
   }
   
   if (Flag == 4){ #Monkey

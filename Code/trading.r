@@ -32,13 +32,15 @@ backtest <- function(StartDate=default1ystart, DDate,ksearch,l) {
   g1 <- ggplot(plotdata,aes(x=Date,y=value,colour=variable))+geom_line()+
     ggtitle(paste0(KKR,"- Cumulative return from strategy vs market"))
   print(g1)
-  bardat <- xts(TradeReturn-MktReturn,index(test_prices))
-  colnames(bardat) <- "Alpha"
-  barplot(bardat,main="Alpha achieved by strategy")
-  
+  # bardat <- xts(TradeReturn-MktReturn,index(test_prices))
+  # colnames(bardat) <- "Alpha"
+  # barplot(bardat,main="Alpha achieved by strategy")
+  plotmkt <- as.numeric(coredata(MktReturn)-1)
+  plottrade <- TradeReturn-1
   print("Comparison of positive/negative returns vs market")
+  print(table(Market=sign(plotmkt),Strategy=sign(plottrade)))
   
-  print(table(Market=sign(MktReturn-1),Strategy=sign(TradeReturn-1)))
+  print(boxplot(plotmkt,plottrade,names=c("Market Returns","Strategy Returns")))
 
   print(sprintf("Total Profit percentage %.1f%% with volatility of %.1f and Sharpe %.1f",
                 100*last(CumTradeReturn)-100,100*SDTradeReturn,SharpeTradeReturn))
