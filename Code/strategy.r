@@ -11,7 +11,7 @@ load("DataWork/StockPrices.Rdata")
 fopt <- function(x,r) {-sum(log(x%*%t(r)))}  #function for solnp optimization
 eqfun <- function(x,r) {sum(x)}              #for equality optimization constraint
                                              #need to have same # of parameters
-beststrat <- function(DDate,ksearch,l,window_th=60) {
+beststrat <- function(DDate,ksearch,l,window_th=10,recent_weight=FALSE) {
   retcolnames <- grep("return",colnames(StockPrices))
   nstocks <- length(retcolnames)
   DDate <- as.Date(DDate)
@@ -45,7 +45,7 @@ beststrat <- function(DDate,ksearch,l,window_th=60) {
       #group k-windows into classes using KKR method
       Classifier <- Classification(KVec=Kvec,K=ksearch[i],L=l,KKR=KKR)
     }
-    BestClass <- matchfunc(DDate,ksearch[i],l,Classifier)
+    BestClass <- matchfunc(DDate,ksearch[i],l,Classifier,recent_weight)
     ClassSegments <- Classifier[Classifier$Class==BestClass,1] #assume Class column name
     DDateReturns <- StockPrices[ClassSegments+ksearch[i],retcolnames] #Returns on day k+1
     DDateReturns <- DDateReturns/100+1                       #price relatives in pct

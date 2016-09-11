@@ -7,12 +7,14 @@ library(reshape2)
 load("DataWork/StockPrices.Rdata")
 default1ystart <- index(last(first(StockPrices,"1 year"),"1 day"))
 #backtest strategy from start of stock data till DDate
-backtest <- function(StartDate=default1ystart, DDate,ksearch,l) {
+backtest <- function(StartDate=default1ystart, DDate,ksearch,l,
+                     window_th,recent_weight) {
   retcolnames <- grep("return",colnames(StockPrices))
   period <- paste0(StartDate,"/",DDate)
   test_prices <- StockPrices[period]
   #run best strategy function for each date in test period and create xvec allocation matrix
-  xvec <- t(apply(as.matrix(as.Date(index(test_prices))),1,beststrat,ksearch,l))
+  xvec <- t(apply(as.matrix(as.Date(index(test_prices))),
+                  1,beststrat,ksearch,l,window_th,recent_weight))
   colnames(xvec) <- colnames(StockPrices)[retcolnames]
   colnames(xvec) <- gsub("return","_Wt",colnames(xvec))
   BacktestAllocation <- xts(xvec,index(test_prices))
@@ -26,12 +28,6 @@ backtest <- function(StartDate=default1ystart, DDate,ksearch,l) {
   SharpeTradeReturn <- (last(CumTradeReturn)^(1/yearsperiod)-1)/SDTradeReturn
   MktReturn <- test_prices$Marketreturn/100+1
   CumMktReturn <- cumprod(MktReturn)
-  plotdata <- data.frame(CumMktReturn,CumTradeReturn,Date=index(test_prices))
-  colnames(plotdata) <- c("CumMarketReturn","CumTradeReturn","Date")
-  plotdata <- melt(plotdata,id="Date")
-  g1 <- ggplot(plotdata,aes(x=Date,y=value,colour=variable))+geom_line()+
-    ggtitle(paste0(KKR,"- Cumulative return from strategy vs market"))
-  print(g1)
   # bardat <- xts(TradeReturn-MktReturn,index(test_prices))
   # colnames(bardat) <- "Alpha"
   # barplot(bardat,main="Alpha achieved by strategy")
@@ -39,8 +35,18 @@ backtest <- function(StartDate=default1ystart, DDate,ksearch,l) {
   plottrade <- TradeReturn-1
   print("Comparison of positive/negative returns vs market")
   print(table(Market=sign(plotmkt),Strategy=sign(plottrade)))
+  boxplot(plotmkt,plottrade,names=c("Market Returns","Strategy Returns"))
   
-  print(boxplot(plotmkt,plottrade,names=c("Market Returns","Strategy Returns")))
+  klabs <- ksearch[1] #create values of k string for debug
+  if (length(ksearch)>1) {
+    for (i in 2:length(ksearch)) klabs <- paste(klabs,ksearch[i],sep=",")
+  }
+  plotdata <- data.frame(CumMktReturn,CumTradeReturn,Date=index(test_prices))
+  colnames(plotdata) <- c("CumMarketReturn","CumTradeReturn","Date")
+  plotdata <- melt(plotdata,id="Date")
+  g1 <- ggplot(plotdata,aes(x=Date,y=value,colour=variable))+geom_line()+
+    ggtitle(paste0(KKR," k: ",klabs," - Cumulative return"))
+  print(g1)
 
   print(sprintf("Total Profit percentage %.1f%% with volatility of %.1f and Sharpe %.1f",
                 100*last(CumTradeReturn)-100,100*SDTradeReturn,SharpeTradeReturn))

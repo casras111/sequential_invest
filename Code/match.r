@@ -8,7 +8,7 @@ library(xts)
 load("DataWork/StockPrices.Rdata")
 retcolnames <- grep("return",colnames(StockPrices))
 
-matchfunc <- function(DDate,k,l,Classifier) {
+matchfunc <- function(DDate,k,l,Classifier,recent_weight=FALSE,LAD=TRUE) {
   #fix if date is not on trade day, bring to first trading day
   DDate <- index(first(StockPrices[paste0(DDate,"/")],"1 day"))
   DDateindx <- which(index(StockPrices)==DDate)
@@ -28,7 +28,13 @@ matchfunc <- function(DDate,k,l,Classifier) {
     TotalDist <- -1
     for (j in ClassSegments) {
       RetMat <- StockPrices[j:(j+k-1),retcolnames]
-      DistEuclid <- sum((coredata(RetMat) - coredata(kRetMat))^2)
+      #if LAD - least absolute deviation is on, sum absolute distances
+      DistEuclid <- ifelse(LAD,sum(abs(coredata(RetMat) - coredata(kRetMat))),
+                           sum((coredata(RetMat) - coredata(kRetMat))^2))
+      #give more weight to recent data, linear weight
+      if (recent_weight==TRUE) {
+        DistEuclid <- DistEuclid*j/DDateindx
+      }
       if (TotalDist < 0) {TotalDist <- DistEuclid} else {
         TotalDist <- TotalDist+DistEuclid
       }
