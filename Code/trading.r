@@ -10,17 +10,18 @@ default1ystart <- index(last(first(StockPrices,"1 year"),"1 day"))
 backtest <- function(StartDate=default1ystart, DDate,ksearch,l,
                      window_th,recent_weight) {
   retcolnames <- grep("return",colnames(StockPrices))
+  nstocks <- length(retcolnames)
   period <- paste0(StartDate,"/",DDate)
   test_prices <- StockPrices[period]
   #run best strategy function for each date in test period and create xvec allocation matrix
   xvec <- t(apply(as.matrix(as.Date(index(test_prices))),
                   1,beststrat,ksearch,l,window_th,recent_weight))
-  colnames(xvec) <- colnames(StockPrices)[retcolnames]
-  colnames(xvec) <- gsub("return","_Wt",colnames(xvec))
+  colnames(xvec) <- colnames(StockPrices)[retcolnames[-nstocks]]
+  colnames(xvec) <- gsub("return","",colnames(xvec))
   BacktestAllocation <- xts(xvec,index(test_prices))
   print(autoplot(BacktestAllocation,              #for debug of allocation vector
                  main="Stock Weights for backtest period"))
-  TradeReturn <- rowSums(xvec*(test_prices[,retcolnames]/100+1))
+  TradeReturn <- rowSums(xvec*(test_prices[,retcolnames[-nstocks]]/100+1))
   CumTradeReturn <- cumprod(TradeReturn)
   #to calculate sharpe derive yearly volatility and normalize return to yearly value
   SDTradeReturn <- sd(TradeReturn)*16 #multiply by sqrt(256) to get yearly sd
