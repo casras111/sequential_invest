@@ -23,13 +23,14 @@ StockPrices <- SDB()
 #plot total period returns
 retcolnames <- grep("return",colnames(StockPrices))
 print(autoplot(cumprod(StockPrices[,retcolnames]/100+1),facets=NULL,
-               main="Relative Stock Returns"))
+               main="Relative Stock Returns total period"))
 
 # debug section reducing stocks universe to 1 stock and cash
-# limitstocks <- c(2,12,13)
-# autoplot(cumprod(StockPrices[,retcolnames[limitstocks]]/100+1),facets=NULL)
-# StockPrices <- StockPrices[,retcolnames[limitstocks]]
-# save(StockPrices,file = "DataWork/StockPrices.Rdata")
+limitstocks <- c(2,12,13)
+autoplot(cumprod(StockPrices[,retcolnames[limitstocks]]/100+1),facets=NULL,
+         main="Relative Stock Returns in total period - limited")
+StockPrices <- StockPrices[,retcolnames[limitstocks]]
+save(StockPrices,file = "DataWork/StockPrices.Rdata")
 
 ################# Parameters Monkey #####################
 ksearch <- c(10) # (2,5,10,15,20) #values of k for which to optimize allocation vector

@@ -13,6 +13,8 @@ backtest <- function(StartDate=default1ystart, DDate,ksearch,l,
   nstocks <- length(retcolnames)
   period <- paste0(StartDate,"/",DDate)
   test_prices <- StockPrices[period]
+  print(autoplot(cumprod(test_prices[,retcolnames]/100+1),facets=NULL,
+           main="Relative Stock Returns in backtest"))
   #run best strategy function for each date in test period and create xvec allocation matrix
   xvec <- t(apply(as.matrix(as.Date(index(test_prices))),
                   1,beststrat,ksearch,l,window_th,recent_weight))
@@ -38,13 +40,10 @@ backtest <- function(StartDate=default1ystart, DDate,ksearch,l,
   print(table(Market=sign(plotmkt),Strategy=sign(plottrade)))
   boxplot(plotmkt,plottrade,names=c("Market Returns","Strategy Returns"))
   
-  klabs <- ksearch[1] #create values of k string for debug
-  if (length(ksearch)>1) {
-    for (i in 2:length(ksearch)) klabs <- paste(klabs,ksearch[i],sep=",")
-  }
   plotdata <- data.frame(CumMktReturn,CumTradeReturn,Date=index(test_prices))
   colnames(plotdata) <- c("CumMarketReturn","CumTradeReturn","Date")
   plotdata <- melt(plotdata,id="Date")
+  klabs <- paste(ksearch,collapse=",") #create string of k values
   g1 <- ggplot(plotdata,aes(x=Date,y=value,colour=variable))+geom_line()+
     ggtitle(paste0(KKR," k: ",klabs," - Cumulative return"))
   print(g1)
