@@ -24,6 +24,7 @@ matchfunc <- function(DDate,k,l,Classifier,recent_weight=FALSE,LAD=TRUE) {
   for (i in 1:l) {
     #class l segments,relies on Class column name
     ClassSegments <- Classifier[Classifier$Class==i,1]
+    sizeofClass <- length(ClassSegments)
     #illegal initial value to distinguish from incremental add later
     TotalDist <- -1
     for (j in ClassSegments) {
@@ -33,12 +34,13 @@ matchfunc <- function(DDate,k,l,Classifier,recent_weight=FALSE,LAD=TRUE) {
                            sum((coredata(RetMat) - coredata(kRetMat))^2))
       #give more weight to recent data, linear weight
       if (recent_weight==TRUE) {
-        DistEuclid <- DistEuclid*j/DDateindx
+        DistEuclid <- DistEuclid*DDateindx/j
       }
       if (TotalDist < 0) {TotalDist <- DistEuclid} else {
         TotalDist <- TotalDist+DistEuclid
       }
     }
+    TotalDist <- TotalDist/sizeofClass #normalize per number of segments in class
     if ((LowestDist==-1) && (TotalDist > 0)) {             #first valid TotalDist
       LowestDist <- TotalDist
       MinClass <- i } else {
